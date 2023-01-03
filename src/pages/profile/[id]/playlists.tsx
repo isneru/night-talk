@@ -22,7 +22,7 @@ const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData, playlists
           <strong>{userData?.display_name}</strong>
         </div>
       </div>
-      <div className="navbar flex items-center justify-around font-medium text-zinc-400 ">
+      <div className="navbar flex items-center justify-around font-medium text-zinc-400">
         <LinkComponent href={`/profile/${userData.id}`}>Talks</LinkComponent>
         <LinkComponent href={`/profile/${userData.id}/playlists`} isActive>
           Playlists
