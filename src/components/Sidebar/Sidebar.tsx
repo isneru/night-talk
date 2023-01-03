@@ -1,17 +1,15 @@
 /* eslint-disable @next/next/no-img-element */
 import { CurrentlyPlayingTrack } from "components"
 import { useSpotify } from "hooks/useSpotify"
-import { signIn, signOut, useSession } from "next-auth/react"
+import { useSession } from "next-auth/react"
 import Link from "next/link"
-import { House, SignIn, SignOut, User } from "phosphor-react"
+import { Gear, House, User } from "phosphor-react"
 import { useEffect, useState } from "react"
 
 export const Sidebar = () => {
   const spotifyApi = useSpotify()
   const { data: session, status } = useSession()
-  const [spotifyData, setSpotifyData] = useState<any>()
-  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = useState<string | null>()
-  //const currentlyPlaying = useRecoilValue(currentlyPlayingState)
+  const [currentlyPlayingTrack, setCurrentlyPlayingTrack] = useState<string | null | undefined>()
 
   function isAuthenticated() {
     return status === "authenticated"
@@ -20,8 +18,7 @@ export const Sidebar = () => {
   useEffect(() => {
     if (spotifyApi?.getAccessToken()) {
       spotifyApi.getMyCurrentPlayingTrack().then(data => {
-        setSpotifyData(data)
-        setCurrentlyPlayingTrack(data?.body?.item?.name ?? null)
+        setCurrentlyPlayingTrack(data?.body?.item?.name)
       })
     }
   }, [session, spotifyApi])
@@ -37,14 +34,12 @@ export const Sidebar = () => {
           <User size={20} />
           <span>Profile</span>
         </Link>
+        <Link href="/settings" className="flex items-center gap-2 hover:text-white">
+          <Gear size={20} />
+          <span>Settings</span>
+        </Link>
       </div>
       <div className="mt-auto">
-        <button
-          onClick={() => (isAuthenticated() ? signOut() : signIn("spotify"))}
-          className="mb-4 flex items-center gap-2 hover:text-white">
-          {isAuthenticated() ? <SignOut size={20} /> : <SignIn size={20} />}
-          <span>{isAuthenticated() ? "Logout" : "Login"}</span>
-        </button>
         {isAuthenticated() && (
           <div className="flex items-center gap-2">
             <img
@@ -54,7 +49,7 @@ export const Sidebar = () => {
             />
             <div className="flex flex-col overflow-hidden">
               <strong>{session?.user?.name}</strong>
-              <CurrentlyPlayingTrack />
+              <CurrentlyPlayingTrack isSliding track={currentlyPlayingTrack ?? undefined} />
             </div>
           </div>
         )}

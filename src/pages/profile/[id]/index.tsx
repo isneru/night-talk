@@ -1,8 +1,7 @@
-import { CurrentlyPlayingTrack } from "components"
+import { LinkComponent } from "components"
 import { useSSRSpotify } from "hooks/useSSRSpotify"
 import type { GetServerSideProps, NextPage } from "next"
 import { unstable_getServerSession } from "next-auth"
-import Link from "next/link"
 import { authOptions } from "pages/api/auth/[...nextauth]"
 
 interface ProfilePlaylistsProps {
@@ -20,33 +19,14 @@ const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData }: Profile
         />
         <div className="flex flex-col justify-center">
           <strong>{userData?.display_name}</strong>
-          <CurrentlyPlayingTrack />
         </div>
       </div>
-      <div className="border-b  border-gray-700 text-center font-medium text-gray-400">
-        <ul className="-mb-px flex flex-wrap">
-          <li className="mr-2">
-            <Link
-              href={`/profile/${userData.id}`}
-              className="inline-block rounded-t-lg border-b-2 border-blue-500 px-4 py-1 text-blue-500">
-              Talks
-            </Link>
-          </li>
-          <li className="mr-2">
-            <Link
-              href={`/profile/${userData.id}/playlists`}
-              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
-              Playlists
-            </Link>
-          </li>
-          <li className="mr-2">
-            <Link
-              href={`/profile/${userData.id}/contacts`}
-              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
-              Contacts
-            </Link>
-          </li>
-        </ul>
+      <div className="flex items-center justify-around border-b border-zinc-700 text-center font-medium text-zinc-400 ">
+        <LinkComponent href={`/profile/${userData.id}`} isActive>
+          Talks
+        </LinkComponent>
+        <LinkComponent href={`/profile/${userData.id}/playlists`}>Playlists</LinkComponent>
+        <LinkComponent href={`/profile/${userData.id}/contacts`}>Contacts</LinkComponent>
       </div>
     </div>
   )

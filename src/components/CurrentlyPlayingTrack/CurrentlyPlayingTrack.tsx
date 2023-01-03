@@ -1,6 +1,6 @@
+import { neonColorState } from "atoms/randomNeonState"
 import clsx from "clsx"
-import { useRandomNeon } from "hooks/useRandomNeon"
-import { useState } from "react"
+import { useRecoilState } from "recoil"
 
 interface TrackProps {
   track?: string
@@ -8,10 +8,13 @@ interface TrackProps {
 }
 
 export const CurrentlyPlayingTrack = ({ track, isSliding }: TrackProps) => {
-  const [color] = useState(useRandomNeon())
+  const [color] = useRecoilState(neonColorState)
 
   return (
-    <span className={clsx("whitespace-nowrap text-sm font-bold")}>
+    <span
+      className={clsx("whitespace-nowrap text-sm font-bold", {
+        "animate-scroll": isSliding && !!track
+      })}>
       {!!track ? "Currently Playing: " : "Not Listening"}
       {!!track && (
         <span
