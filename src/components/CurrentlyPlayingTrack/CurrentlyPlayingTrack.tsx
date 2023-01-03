@@ -1,6 +1,5 @@
-import { neonColorState } from "atoms/randomNeonState"
 import clsx from "clsx"
-import { useRecoilState } from "recoil"
+import { useRandomNeon } from "hooks/useRandomNeon"
 
 interface TrackProps {
   track?: string
@@ -8,7 +7,7 @@ interface TrackProps {
 }
 
 export const CurrentlyPlayingTrack = ({ track, isSliding }: TrackProps) => {
-  const [color] = useRecoilState(neonColorState)
+  const color = useRandomNeon()
 
   return (
     <span

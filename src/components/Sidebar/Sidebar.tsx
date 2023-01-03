@@ -24,17 +24,19 @@ export const Sidebar = () => {
   }, [session, spotifyApi])
 
   return (
-    <aside className="sidebar flex h-screen w-60 flex-col bg-mainbg p-5 text-zinc-400">
+    <aside className="sidebar flex h-screen w-40 flex-col py-4 pl-5 pr-0 text-zinc-400 lg:w-60">
       <div className="flex flex-col gap-4">
-        <Link href="/" className="flex items-center gap-2 hover:text-white">
+        <Link href="/" className="flex items-center gap-2 tracking-wide hover:text-white lg:text-lg">
           <House size={20} />
           <span>Home</span>
         </Link>
-        <Link href={`/profile/${session?.user.username}`} className="flex items-center gap-2 hover:text-white">
+        <Link
+          href={`/profile/${session?.user.username}`}
+          className="flex items-center gap-2 tracking-wide hover:text-white lg:text-lg">
           <User size={20} />
           <span>Profile</span>
         </Link>
-        <Link href="/settings" className="flex items-center gap-2 hover:text-white">
+        <Link href="/settings" className="flex items-center gap-2 tracking-wide hover:text-white lg:text-lg">
           <Gear size={20} />
           <span>Settings</span>
         </Link>
