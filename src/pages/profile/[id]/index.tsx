@@ -1,22 +1,25 @@
-/* eslint-disable @next/next/no-img-element */
 import { CurrentlyPlayingTrack } from "components"
-import spotifyApi from "lib/spotify"
+import { useSSRSpotify } from "hooks/useSSRSpotify"
 import type { GetServerSideProps, NextPage } from "next"
-import { useSession } from "next-auth/react"
+import { unstable_getServerSession } from "next-auth"
 import Link from "next/link"
+import { authOptions } from "pages/api/auth/[...nextauth]"
 
-const Profile: NextPage = () => {
-  const { data: session, status } = useSession()
+interface ProfilePlaylistsProps {
+  userData: any
+}
+
+const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData }: ProfilePlaylistsProps) => {
   return (
     <div>
       <div className="flex items-center gap-4 p-5">
         <img
-          src={session?.user?.image as string}
+          src={userData?.images[0].url}
           alt="spotify user profile picture"
-          className="h-20 w-20 rounded-full"
+          className="aspect-square h-20 w-20 rounded-full object-cover"
         />
         <div className="flex flex-col justify-center">
-          <strong>{session?.user?.name}</strong>
+          <strong>{userData?.display_name}</strong>
           <CurrentlyPlayingTrack />
         </div>
       </div>
@@ -24,22 +27,22 @@ const Profile: NextPage = () => {
         <ul className="-mb-px flex flex-wrap">
           <li className="mr-2">
             <Link
-              href={`/profile/${session?.user.username}`}
-              className="inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-300">
+              href={`/profile/${userData.id}`}
+              className="inline-block rounded-t-lg border-b-2 border-blue-500 px-4 py-1 text-blue-500">
               Talks
             </Link>
           </li>
           <li className="mr-2">
             <Link
-              href={`/profile/${session?.user.username}/playlists`}
-              className="inline-block rounded-t-lg border-b-2 border-blue-500 p-4 text-blue-500">
+              href={`/profile/${userData.id}/playlists`}
+              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
               Playlists
             </Link>
           </li>
           <li className="mr-2">
             <Link
-              href={`/profile/${session?.user.username}/contacts`}
-              className="inline-block rounded-t-lg border-b-2 border-transparent p-4 hover:border-gray-300 hover:text-gray-300">
+              href={`/profile/${userData.id}/contacts`}
+              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
               Contacts
             </Link>
           </li>
@@ -49,16 +52,19 @@ const Profile: NextPage = () => {
   )
 }
 
-export default Profile
+export default ProfilePlaylists
 
 export const getServerSideProps: GetServerSideProps = async ctx => {
-  const { id } = ctx.query
+  const session = await unstable_getServerSession(ctx.req, ctx.res, authOptions)
+  const spotifyApi = useSSRSpotify(session)
 
-  if (spotifyApi.getAccessToken()) {
+  const id = ctx.params!["id"]
+  if (spotifyApi?.getAccessToken()) {
+    const playlistsData = await spotifyApi.getUserPlaylists(id as string)
     const userData = await spotifyApi.getUser(id as string)
-
-    return { props: { userData: userData.body } }
+    return { props: { playlistsData: playlistsData.body.items, userData: userData.body } }
   }
-
-  return { props: {} }
+  return {
+    props: {}
+  }
 }

@@ -7,10 +7,9 @@ import { authOptions } from "pages/api/auth/[...nextauth]"
 
 interface ProfilePlaylistsProps {
   userData: any
-  playlistsData: any[]
 }
 
-const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData, playlistsData }: ProfilePlaylistsProps) => {
+const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData }: ProfilePlaylistsProps) => {
   return (
     <div>
       <div className="flex items-center gap-4 p-5">
@@ -36,33 +35,18 @@ const ProfilePlaylists: NextPage<ProfilePlaylistsProps> = ({ userData, playlists
           <li className="mr-2">
             <Link
               href={`/profile/${userData.id}/playlists`}
-              className="inline-block rounded-t-lg border-b-2 border-blue-500 px-4 py-1 text-blue-500">
+              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
               Playlists
             </Link>
           </li>
           <li className="mr-2">
             <Link
               href={`/profile/${userData.id}/contacts`}
-              className="inline-block rounded-t-lg border-b-2 border-transparent px-4 py-1 hover:border-gray-300 hover:text-gray-300">
+              className="inline-block rounded-t-lg border-b-2 border-blue-500 px-4 py-1 text-blue-500">
               Contacts
             </Link>
           </li>
         </ul>
-      </div>
-      <div className="grid grid-cols-1 gap-3  p-4 md:grid-cols-2 lg:grid-cols-4">
-        {playlistsData?.map(playlist => (
-          <div key={playlist.name} className="flex h-24 gap-2 rounded bg-white/5 p-2">
-            <img src={playlist.images[0].url} className="aspect-square h-20 w-20 rounded object-cover" />
-            <div className="flex flex-col overflow-y-auto">
-              <a href={playlist.external_urls.spotify} className="font-bold hover:underline">
-                {playlist.name}
-              </a>
-              <span className="text-zinc-400">
-                {playlist.description !== "" ? playlist.description : "No description."}
-              </span>
-            </div>
-          </div>
-        ))}
       </div>
     </div>
   )
