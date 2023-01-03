@@ -1,7 +1,8 @@
 export default function Home() {
   return (
     <div>
-      <h1>aa</h1>
+      <p className="h-screen">a</p>
+      <p className="h-screen">b</p>
     </div>
   )
 }

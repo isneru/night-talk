@@ -1,3 +1,44 @@
 @tailwind components;
 @tailwind base;
 @tailwind utilities;
+
+body {
+  @apply bg-mainbg text-white antialiased;
+}
+
+* {
+  @apply scrollbar-hide;
+}
+
+@layer components {
+  .sidebar {
+    @apply relative;
+  }
+  .sidebar:before {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: linear-gradient(to bottom, #0096ff 0%, #f637ec 50%, #faea48 100%);
+    transform: translate3d(1px, 0px, 0) scale(1);
+    filter: blur(0px);
+    opacity: 0.4;
+    transition: opacity 0.3s;
+    border-radius: inherit;
+  }
+
+  .sidebar::after {
+    content: "";
+    z-index: -1;
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: inherit;
+    border-radius: inherit;
+  }
+}
